@@ -1,4 +1,4 @@
-# Agent Reliability Engineering (ARE)
+# Agent Responsibility Engineering (ARE)
 
 **A discipline for governing autonomous AI agents in production.**
 
@@ -18,7 +18,7 @@ That is the problem ARE exists to solve.
 
 ## The Discipline
 
-Agent Reliability Engineering is the practice of making autonomous AI agents **safe to run at scale** in production environments.
+Agent Responsibility Engineering is the practice of making autonomous AI agents **safe to run at scale** in production environments.
 
 Not safe in theory. Safe in practice — in the same way Site Reliability Engineering made distributed systems safe to operate at scale. SRE didn't eliminate failure. It made failure observable, bounded, and recoverable. ARE does the same for autonomous agents.
 
