@@ -6,13 +6,13 @@
 *Originator, Agent Responsibility Engineering*  
 agentresponsibilityengineering.com | srexai.dev | 2026
 
-**Preprint (reconciled).** Bounded STPA closure per [`STPA_RESOLUTION.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md) *(public mirror)*. **Public discipline materials** (README, tenets, PDFs): [github.com/srex-dev/AgentResponsibilityEngineering](https://github.com/srex-dev/AgentResponsibilityEngineering). **This paper’s evidence** is drawn from **privately held** implementation artifacts and a frozen bundle under `research/evidence-bundles/` in the **private** ARE monolith — the **full monolith** is **not** asserted here as an open-source public clone. **Paper / PDF / evidence hub (public):** [`README_PAPER_PIPELINE.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/docs/stamp-paper/README_PAPER_PIPELINE.md), [ARXIV_AND_EVIDENCE_REALITY.md](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/docs/stamp-paper/ARXIV_AND_EVIDENCE_REALITY.md). *Update commit hash when re-freezing.*
+**Preprint (reconciled).** Bounded STPA closure is recorded in **`STPA_RESOLUTION.md`** (public mirror: [`research/stpa/…`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md)). The **AgentResponsibilityEngineering** repository hosts the public discipline materials (README, tenets, PDF, mirrored STPA). This PDF is **Markdown-derived** (Word or pandoc), not a separate hand-written arXiv LaTeX project. Evidence is **tiered** in §13: argument here, mirrored STPA, then a **frozen hashed packet** under `research/evidence-bundles/` in the private monolith (not a full public source dump). *Re-freeze updates the commit named in §13.*
 
 # Abstract
 
 Autonomous agent systems are increasingly deployed where **consequential actions** (API calls, data access, transactions) matter for safety, privacy, and compliance. Much of the prevailing stack is **observational or advisory**: prompts, filters, checkpoints, and logs that do not always sit on the **causal path** to side effects. This paper connects **Nancy Leveson's STAMP/STPA** tradition—safety as **control** of a **controlled process**, with feedback and an explicit process model—to **Agent Responsibility Engineering (ARE)**—a discipline with **public orientation** at [srex-dev/AgentResponsibilityEngineering](https://github.com/srex-dev/AgentResponsibilityEngineering), evaluated in this preprint against a **privately held** reference implementation (this manuscript describes **control structure and safety case**, not a turnkey public product drop).
 
-We present a **bounded STAMP/STPA-complete** safety case **at a defined execution boundary**, not a proof of “safe AI” in the large. **Completeness** means: every hazard **in scope** in the working STPA package is **mitigated**, **accepted with documented residual risk**, or **assumption-bounded**, as recorded in the normative artifact [`STPA_RESOLUTION.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md) *(public mirror of `research/stpa/STPA_RESOLUTION.md`; the private ARE platform clone uses the same relative paths under `research/stpa/`)*. The case is supported by **traceability** (losses, hazards, unsafe control actions, constraints), **component tests** (Rust and Go services on the golden path), an **interposition audit**, and a **frozen reviewer evidence bundle** (commit-attested). A **TLA+** specification skeleton states ordering obligations; it is **not** a machine-checked proof.
+We present a **bounded STAMP/STPA-complete** safety case **at a defined execution boundary**, not a proof of “safe AI” in the large. **Completeness** means: every hazard **in scope** in the working STPA package is **mitigated**, **accepted with documented residual risk**, or **assumption-bounded**, as recorded in **`STPA_RESOLUTION.md`** (same file appears in the public mirror under `research/stpa/` and in a private monolith clone under `research/stpa/`). The case is supported by **traceability** (losses, hazards, unsafe control actions, constraints), **component tests** (Rust and Go services on the golden path), an **interposition audit**, and a **frozen reviewer evidence bundle** (commit-attested). A **TLA+** specification skeleton states ordering obligations; it is **not** a machine-checked proof.
 
 We **do not** claim universal fail-closed behavior in every subsystem, production validation in a named sector, or bidirectional formal proof of every narrative mapping in the broader ARE research program. We **do** claim: (1) a **STAMP-aligned** control reading of the governed path; (2) **causal interposition** (policy coprocessor → pre-execution validation → receipt binding → executor); (3) **fail-closed** semantics for a **permit** verdict when the immutable **Ledger** write fails at the coprocessor (permit cannot leave without durable evidence—**Deny** with documented reason); (4) explicit **residual risk** and **out-of-scope** surfaces (deployment routing, strata composition, distributed lag, human escalation).
 
@@ -206,33 +206,17 @@ Agent internal reasoning : ARE governs what agents do, not what they think. The 
 
 # 13. Evidence, reproducibility, and frozen packet
 
-**This is not “full evidence or nothing.”** There are **three levels** so public readers are not asked to download megabytes of logs, while reviewers can still escalate to **hashed, replayable** artifacts.
+Evidence is **tiered**, not binary. The **argument** lives in this paper (including **Appendices A–C**: roles, hazard table, graphic summary) and in the companion public PDF on **AgentResponsibilityEngineering** (README, tenets, mirrored STPA). **Raw logs and full gate matrices are not pasted into the public PDF**: they expose integration topology and operational detail we treat as hygiene and IP—the usual split between a public safety case and a confidential engineering packet.
 
-## 13.1 Level 1 — Always public (no NDA, no bundle download)
+**Normative STPA** (package, resolution, UCA enumeration, hazard–constraint–test closure, boundary and causal scenario files) is readable without monolith access via the public mirror [research/stpa/](https://github.com/srex-dev/AgentResponsibilityEngineering/tree/main/research/stpa). The same filenames live under `research/stpa/` in the **private** implementation repository.
 
-1. This paper (including **Appendices A–C**: roles, hazard table, graphic summary).
-2. The public discipline repository (README, tenets, PDFs): [github.com/srex-dev/AgentResponsibilityEngineering](https://github.com/srex-dev/AgentResponsibilityEngineering).
-3. **[`EVIDENCE_PUBLIC_SUMMARY.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/docs/stamp-paper/EVIDENCE_PUBLIC_SUMMARY.md)** (`docs/stamp-paper/` in the public discipline repo) — one-page **attestation**: what was frozen, which commit, what *classes* of artifact exist (still **not** raw logs).
+**Attestation (frozen packet identity).** The submission freeze referenced throughout this work is directory `research/evidence-bundles/2026-04-26-stamp-safety-reviewer-packet-submission/`, commit **`653d455346e57f6a0ba37eecb4132138d923a36d`** (see `GIT_HEAD.txt` in the packet). Contents include copies of normative STPA and paper pointers, **full** pytest output (`test-output.log`), internal gate matrix logs, `MANIFEST.md`, and **`FILES.sha256`** for integrity. At freeze, STAMP harness tests reported **10 passed**; internal gates **48 components, ALL PASS** (see bundle logs—re-freeze updates these numbers). **Private-only** paths for claim discipline and audits (not mirrored on the public repo): `research/interposition_audit.md`, `research/claims_ledger.md`, `research/reviewer_attacks.md`, and track summaries under `research/track-a-stamp/`, `research/track-b-interposition/`, and `research/DUAL_TRACK_SUMMARY.md`.
 
-**Why the public PDF does not embed the full bundle:** logs and internal gate matrices expose **integration topology, paths, and operational detail** we treat as **implementation hygiene / IP**. That is normal for industrial safety cases: the **argument** is public; the **engineering packet** is often shared under confidentiality or as supplementary material.
+**Escalation.** Reviewers may obtain the zip under confidentiality or as **arXiv Ancillary** / supplementary material. From a clone that contains the bundle, a portable tree can be assembled with `python tools/paper/assemble_submission_package.py` (see `paper/submission-package/README.md`). Hashes and transcripts are sufficient to **check** the paper’s evidentiary claims without treating the PDF as the log dump.
 
-## 13.2 Level 2 — Repository research spine (clone the `are` repo)
+### 13.1 Graphic summary (tables + equation-style figures)
 
-**Normative STPA markdown** (same filenames as `research/stpa/` in the private ARE monolith) is **mirrored publicly** at [https://github.com/srex-dev/AgentResponsibilityEngineering/tree/main/research/stpa](https://github.com/srex-dev/AgentResponsibilityEngineering/tree/main/research/stpa) so readers do not need monolith access to read `STPA_RESOLUTION.md` and the package.
-
-**On the public mirror:** closure and traceability under `research/stpa/` include `README.md`, `STPA_PACKAGE.md`, `STPA_RESOLUTION.md`, `UCA_ENUMERATION.md`, `HAZARD_UCA_CONSTRAINT_TEST_CLOSURE.md`, `BOUNDARY_AND_ASSUMPTIONS_STPA.md`, `CAUSAL_SCENARIOS_SYSTEMATIC.md`.
-
-**Private ARE platform only** *(not asserted as a full public clone; paths are for authors / reviewers with repo access)*: `research/interposition_audit.md`; `research/claims_ledger.md`, `research/reviewer_attacks.md`; `research/track-a-stamp/EVIDENCE_SUMMARY.md`, `research/track-b-interposition/EVIDENCE_SUMMARY.md`; `research/DUAL_TRACK_SUMMARY.md`.
-
-## 13.3 Level 3 — Full frozen packet (on request, or ancillary zip)
-
-**Directory:** `research/evidence-bundles/2026-04-26-stamp-safety-reviewer-packet-submission/` — copies of normative docs, **full** pytest + internal-gate transcripts, `GIT_HEAD.txt`, `MANIFEST.md`, and **`FILES.sha256`** for integrity. **Program chairs / reviewers** may request this zip under confidentiality, or authors may attach it as **arXiv Ancillary** / journal supplementary. **Assemble** a portable tree with `python tools/paper/assemble_submission_package.py` (see `paper/submission-package/README.md`).
-
-**Independent verification without full source:** Level 3 provides **verifiable artifacts** (hashes, transcripts, structured outputs, normative closure text) **sufficient to inspect the paper’s evidentiary claims**; Level 1–2 still let readers **orient** without that download.
-
-## 13.4 Graphic summary (tables + equation-style figures)
-
-The Word/PDF pipeline embeds raster figures generated from `tools/paper/render_paper_assets.py` (run before `md_to_arxiv_docx.py`). **Golden path:**
+Figures below are generated by `tools/paper/render_paper_assets.py` (run before `md_to_arxiv_docx.py`). **Golden path:**
 
 ![Figure 1. Governed execution chain (graphic summary).](assets/fig_golden_path.png)
 
@@ -353,8 +337,8 @@ Additional citations from the source manuscript (Rabanser et al., runtime govern
 
 ## Appendix C. Figure (graphic): golden governed execution chain
 
-*Graphic also shown in §13.4. Deployment routing and side channels remain explicit assumptions in `STPA_RESOLUTION.md`.*
+*Graphic also shown in §13.1. Deployment routing and side channels remain explicit assumptions in `STPA_RESOLUTION.md`.*
 
 ![Figure C-1. Governed execution chain (graphic summary).](assets/fig_golden_path.png)
 
-*Version note: Assembled by `tools/paper/build_stamp_arxiv_reconciled.py` (private ARE repo) from `paper/STAMP_ARE_docx_paragraphs.txt` plus reconciled inserts; §5.2–§12.2 and §14.2 are spliced from `paper/stamp_arxiv_alignment_block.md` and `paper/stamp_arxiv_alignment_14_2.md` when present. Submission layout vs LaTeX (public hub): [`ARXIV_AND_EVIDENCE_REALITY.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/docs/stamp-paper/ARXIV_AND_EVIDENCE_REALITY.md). Re-freeze evidence and update the commit hash when preparing submission.*
+*Version note: Assembled by `tools/paper/build_stamp_arxiv_reconciled.py` (private ARE repo) from `paper/STAMP_ARE_docx_paragraphs.txt` plus reconciled inserts; §5.2–§12.2 and §14.2 are spliced from `paper/stamp_arxiv_alignment_block.md` and `paper/stamp_arxiv_alignment_14_2.md` when present. Deposit PDF is Markdown-derived (see `paper/README_PAPER_PIPELINE.md` in the monolith for tooling). Re-freeze evidence and update the commit hash in §13 when preparing submission.*
