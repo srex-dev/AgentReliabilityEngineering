@@ -4,6 +4,12 @@
 
 ---
 
+## Normative STPA (public, no ARE clone required)
+
+The full **`research/stpa/`** tree is mirrored on the public discipline repo:  
+[github.com/srex-dev/AgentResponsibilityEngineering/tree/main/research/stpa](https://github.com/srex-dev/AgentResponsibilityEngineering/tree/main/research/stpa)  
+(`STPA_RESOLUTION.md`, `STPA_PACKAGE.md`, UCA enumeration, hazard closure, etc.)
+
 ## Frozen packet identity
 
 | Field | Value |

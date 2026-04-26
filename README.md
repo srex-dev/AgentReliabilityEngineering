@@ -114,7 +114,9 @@ Structured argument connecting **STAMP/STPA** to **Agent Responsibility Engineer
 | **`ARXIV_AND_EVIDENCE_REALITY.md`** | Short pointer: arXiv LaTeX vs this Markdown path. |
 | **`paper-assets/*.png`** | Raster figures embedded in the PDF (golden path + invariant equations). |
 
-Full **Level 3** frozen packets (logs, `FILES.sha256`, copied `STPA_RESOLUTION.md`, etc.) live with the **reference platform** repository under `research/evidence-bundles/` — not in this public repo; reviewers can request or receive the zip as supplementary material.
+**Normative STPA package (public):** [`research/stpa/`](research/stpa/) — mirror of the private ARE repo’s `research/stpa/` so **`STPA_RESOLUTION.md`** and related closure docs are readable without monolith access.
+
+Full **Level 3** frozen packets (logs, `FILES.sha256`, copied artifacts, etc.) remain with the **private** platform repository under `research/evidence-bundles/` — not here; reviewers can request or receive the zip as supplementary material.
 
 ---
 
