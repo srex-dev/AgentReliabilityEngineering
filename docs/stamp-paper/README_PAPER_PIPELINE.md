@@ -30,8 +30,9 @@ python tools/paper/build_reference_docx.py
 # 4) Word (embeds tables + images from paper/assets/; uses paper/templates/reference.docx when present)
 python tools/paper/md_to_arxiv_docx.py
 
-# 5) PDF — pandoc+xelatex if installed; else docx2pdf from the DOCX above → paper/STAMP_ARE_Paper.pdf
+# 5) PDF — local pandoc (pdflatex/xelatex/lualatex) if installed; else Docker ``pandoc/latex``; else docx2pdf
 python tools/paper/build_stamp_arxiv_pdf.py paper/STAMP_ARE_Paper.pdf
+#    Docker-only (good typography without local TeX): python tools/paper/build_stamp_arxiv_pdf.py --docker-only paper/STAMP_ARE_Paper.pdf
 
 # 6) Copy to AgentResponsibilityEngineering (sibling clone; or set AGENT_RESP_PUBLIC_REPO)
 python tools/paper/sync_public_discipline_repo.py
