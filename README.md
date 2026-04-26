@@ -102,21 +102,17 @@ ARE operates across four layers:
 
 ## STAMP paper (bounded safety case)
 
-Structured argument connecting **STAMP/STPA** to **Agent Responsibility Engineering** at a **defined execution boundary** (not “safe AI” in the large). **Evidence is tiered** (public paper → one-page summary → full hashed bundle on request); see **`EVIDENCE_PUBLIC_SUMMARY.md`** and §13 of the Markdown/PDF.
+Structured argument connecting **STAMP/STPA** to **Agent Responsibility Engineering** at a **defined execution boundary**. **Evidence is tiered** (public paper → one-page summary → full hashed bundle on request).
 
-| File | Description |
-|------|-------------|
-| **`README_PAPER_PIPELINE.md`** | **Start here** — build order, links, submission zip pointer. |
-| **`STAMP_ARE_Paper.pdf`** | Latest PDF (Word pipeline: tables + embedded figure/equation PNGs). |
-| **`STAMP_ARE_Paper_arxiv_ready.md`** / **`.docx`** | Sources synced from the ARE platform `paper/` build. |
-| **`EVIDENCE_PUBLIC_SUMMARY.md`** | **Level 2** attestation: freeze id, commit, what artifact *classes* exist (no raw logs). |
-| **`PDF_AND_WORD_FORMATTING.md`** | Why PDF layout differs from LaTeX; OneDrive / export tips. |
-| **`ARXIV_AND_EVIDENCE_REALITY.md`** | Short pointer: arXiv LaTeX vs this Markdown path. |
-| **`paper-assets/*.png`** | Raster figures embedded in the PDF (golden path + invariant equations). |
+| What | Where |
+|------|--------|
+| **Start here (pipeline + links)** | [`docs/stamp-paper/README.md`](docs/stamp-paper/README.md) |
+| **Canonical PDF** | **[`STAMP_ARE_Paper.pdf`](STAMP_ARE_Paper.pdf)** (repo root — stable URL) |
+| **Markdown / Word sources** | [`paper/`](paper/) |
+| **Figure PNGs** | [`assets/stamp-paper/`](assets/stamp-paper/) |
+| **Normative STPA mirror** | [`research/stpa/`](research/stpa/) |
 
-**Normative STPA package (public):** [`research/stpa/`](research/stpa/) — mirror of the private ARE repo’s `research/stpa/` so **`STPA_RESOLUTION.md`** and related closure docs are readable without monolith access.
-
-Full **Level 3** frozen packets (logs, `FILES.sha256`, copied artifacts, etc.) remain with the **private** platform repository under `research/evidence-bundles/` — not here; reviewers can request or receive the zip as supplementary material.
+Full **Level 3** frozen packets remain with the **private** ARE platform repository — not in this public repo; reviewers may receive the zip as supplementary material.
 
 ---
 
