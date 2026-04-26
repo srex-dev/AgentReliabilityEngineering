@@ -29,14 +29,14 @@ python tools/paper/sync_public_discipline_repo.py
 
 ### PDF quality (arXiv-style)
 
-The **hosted** PDF should be built with **LaTeX via pandoc** when possible (Times-like fonts, proper section hierarchy, justified body).
+The **hosted** PDF is built with **LaTeX via pandoc** when possible: **10pt** body, **Latin Modern** (OpenType, the same design family as classic Computer Modern—what most arXiv `article` PDFs use). It is **not Times New Roman**; for **Times** you need a full local TeX install and **`pdflatex`** (the script passes `fontfamily=times` there). Docker’s `pandoc/latex` image often **cannot** build Times/Palatino `pdflatex` paths (missing Type1 metrics), so Docker sticks to **XeLaTeX + Latin Modern**.
 
 1. **Local:** Install [Pandoc](https://pandoc.org/installing.html) and a TeX distribution (e.g. [MiKTeX](https://miktex.org/) on Windows). `build_stamp_arxiv_pdf.py` tries `pdflatex`, then `xelatex`, then `lualatex`.
 2. **Docker (no local LaTeX):** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), then from the `are` repo root run  
    `python tools/paper/build_stamp_arxiv_pdf.py --docker-only paper/STAMP_ARE_Paper.pdf`  
-   This pulls `pandoc/latex:latest` and uses **XeLaTeX** with the image’s default Latin Modern fonts (publication-grade layout; not identical to Times). Then run `sync_public_discipline_repo.py`.  
+   This pulls `pandoc/latex:latest` and uses **XeLaTeX** with **10pt Latin Modern**. Then run `sync_public_discipline_repo.py`.  
    *Tip:* Run `python …` from **cmd.exe** or **PowerShell** if Git Bash rewrites Docker `-w /data` paths.
-3. **Fallback:** `docx2pdf` (Microsoft Word) only if pandoc paths fail — typography is weaker; the DOCX builder still applies line spacing, justified body text, and correct **Heading 1** for every `# Section` after the title.
+3. **Fallback:** `docx2pdf` (Microsoft Word) only if pandoc paths fail — typography is weaker; the DOCX uses **10pt Times New Roman** for parity with the Word-first path.
 
 ## DOCX-only PDF path
 
