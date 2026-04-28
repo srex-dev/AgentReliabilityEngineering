@@ -1,1 +1,1 @@
-2026-04-26 — Synced from private ARE repo research/stpa/ (commit at operator discretion; match are HEAD when refreshing).
+2026-04-28 — Synced from private ARE repo research/stpa/ (commit at operator discretion; match are HEAD when refreshing).
