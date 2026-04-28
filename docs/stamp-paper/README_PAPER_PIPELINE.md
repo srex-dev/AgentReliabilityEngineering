@@ -14,6 +14,7 @@ If anything felt **scattered**, use this file as the hub.
 | **Why isn’t the full evidence bundle inside the public PDF?** | `paper/STAMP_ARE_ARXIV_READY.md` §13 + `paper/EVIDENCE_PUBLIC_SUMMARY.md` |
 | **Word/PDF looks wrong — how do I fix formatting?** | `paper/PDF_AND_WORD_FORMATTING.md` |
 | **Claims cheat sheet** | `paper/STAMP_ARE_FINAL.md` |
+| **Validation tiers (T0–T3) for E2E vs paper claims** | `docs/validation-tiers.md` |
 
 ## Build order (slim paper → Word → PDF → public sync)
 

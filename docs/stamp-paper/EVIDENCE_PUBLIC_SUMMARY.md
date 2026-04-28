@@ -2,6 +2,8 @@
 
 **Purpose:** Give chairs and readers a **high-level view** without opening the **Level 3** frozen packet (raw logs, full gate matrices). This file is **not** a substitute for the bundle when a reviewer is checking hashes and transcripts.
 
+**E2E / compose vs staging:** Strong claims in the manuscript should map to a **validation tier** (T0–T3). See [`docs/validation-tiers.md`](../docs/validation-tiers.md) and align prose with [`research/are-theory-expansion/GAP_MAP.md`](../research/are-theory-expansion/GAP_MAP.md) **claim status**—do not treat local Docker-only runs (T1) as proof of production behavior (T3) without separate evidence.
+
 ---
 
 ## Normative STPA (public, no ARE clone required)

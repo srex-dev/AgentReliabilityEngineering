@@ -6,13 +6,13 @@
 *Originator, Agent Responsibility Engineering*  
 agentresponsibilityengineering.com | srexai.dev | 2026
 
-**Preprint (reconciled).** Bounded STPA closure is recorded in **`STPA_RESOLUTION.md`** (public mirror: [`research/stpa/…`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md)). The **AgentResponsibilityEngineering** repository hosts the public discipline materials (README, tenets, PDF, mirrored STPA). This PDF is **Markdown-derived** (Word or pandoc), not a separate hand-written arXiv LaTeX project. Evidence is **tiered** in §13: argument here, mirrored STPA, then a **frozen hashed packet** under `research/evidence-bundles/` in the private monolith (not a full public source dump). *Re-freeze updates the commit named in §13.*
+**Preprint (reconciled).** Bounded STPA closure is recorded in **`STPA_RESOLUTION.md`** (public mirror: [`research/stpa/…`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md)). The **AgentResponsibilityEngineering** repository hosts the public discipline materials (README, tenets, PDF, mirrored STPA). Evidence is **tiered** in §13: argument here, mirrored STPA, then a **frozen hashed packet** under `research/evidence-bundles/` in the private monolith (not a full public source dump). *Re-freeze updates the commit named in §13.*
 
 # Abstract
 
 Autonomous agent systems are increasingly deployed where **consequential actions** (API calls, data access, transactions) matter for safety, privacy, and compliance. Much of the prevailing stack is **observational or advisory**: prompts, filters, checkpoints, and logs that do not always sit on the **causal path** to side effects. This paper connects **Nancy Leveson's STAMP/STPA** tradition—safety as **control** of a **controlled process**, with feedback and an explicit process model—to **Agent Responsibility Engineering (ARE)**—a discipline with **public orientation** at [srex-dev/AgentResponsibilityEngineering](https://github.com/srex-dev/AgentResponsibilityEngineering), evaluated in this preprint against a **privately held** reference implementation (this manuscript describes **control structure and safety case**, not a turnkey public product drop).
 
-We present a **bounded STAMP/STPA-complete** safety case **at a defined execution boundary**, not a proof of “safe AI” in the large. **Completeness** means: every hazard **in scope** in the working STPA package is **mitigated**, **accepted with documented residual risk**, or **assumption-bounded**, as recorded in **`STPA_RESOLUTION.md`** (same file appears in the public mirror under `research/stpa/` and in a private monolith clone under `research/stpa/`). The case is supported by **traceability** (losses, hazards, unsafe control actions, constraints), **component tests** (Rust and Go services on the golden path), an **interposition audit**, and a **frozen reviewer evidence bundle** (commit-attested). A **TLA+** specification skeleton states ordering obligations; it is **not** a machine-checked proof.
+We present a **bounded STAMP/STPA closure** safety case **at a defined execution boundary**, not a proof of “safe AI” in the large. **Closure** means: every hazard **in scope** in the working STPA package is **mitigated**, **accepted with documented residual risk**, or **assumption-bounded**, as recorded in **`STPA_RESOLUTION.md`** (same file appears in the public mirror under `research/stpa/` and in a private monolith clone under `research/stpa/`). The case is supported by **traceability** (losses, hazards, unsafe control actions, constraints), **component tests** (Rust and Go services on the golden path), an **interposition audit**, and a **frozen reviewer evidence bundle** (commit-attested). A **TLA+** specification skeleton states ordering obligations; it is **not** a machine-checked proof.
 
 We **do not** claim universal fail-closed behavior in every subsystem, production validation in a named sector, or bidirectional formal proof of every narrative mapping in the broader ARE research program. We **do** claim: (1) a **STAMP-aligned** control reading of the governed path; (2) **causal interposition** (policy coprocessor → pre-execution validation → receipt binding → executor); (3) **fail-closed** semantics for a **permit** verdict when the immutable **Ledger** write fails at the coprocessor (permit cannot leave without durable evidence—**Deny** with documented reason); (4) explicit **residual risk** and **out-of-scope** surfaces (deployment routing, strata composition, distributed lag, human escalation).
 
@@ -20,23 +20,25 @@ We **do not** claim universal fail-closed behavior in every subsystem, productio
 
 # 1. The Problem
 
-Agents are in production. Not demos. Not pilots. Production systems making consequential decisions in regulated environments -- financial services, healthcare, critical infrastructure. They reason, plan, and act. They call APIs, read records, initiate transactions, and generate outputs that affect real people under real regulatory obligations. The governance approaches that exist were not designed for this. They were designed for a simpler version of the problem: a model that takes input and produces output, with a human reviewing the output before anything happens. That version of the problem is already obsolete. Prompt engineering constrains what the agent is told to do. It does not constrain what the agent can do. Output filtering catches some classes of bad outputs after the agent has acted. Human checkpoints insert review at defined decision points, but agents act faster than checkpoints can follow and the checkpoints are defined in advance of failure modes that will actually matter. None of these approaches provides what safety engineering has known for fifty years is required: a control structure. A control structure is not a rule set. It is not a monitoring system. It is not a policy document. A control structure is the complete system of controllers, controlled processes, control actions, and feedback mechanisms whose interaction produces safety as a property of the architecture. Safety engineering learned this by studying accidents. Accidents in complex systems do not happen because a component fails. They happen because the control structure failed -- because the controller was operating on a process model that had drifted from reality and issued actions that were wrong, or missing, or too late. Agent governance has not been analyzed through this lens. The failure modes that STAMP predicts for inadequate control structures are exactly the failure modes that ungoverned agent systems exhibit. The theoretical foundation has existed for fifty years. It has not been applied here. Agent Responsibility Engineering is the application. This paper gives a **bounded, evidence-aligned** account of that connection at the **defined execution boundary**—not a universal proof of safe AI.
+Production agents now perform consequential actions under regulatory and safety constraints. Most governance stacks remain advisory (prompts, output filters, checkpoints) and do not reliably sit on the causal path to side effects. That creates an expected failure mode in systems terms: constraints are issued, but control is not consistently enforced against real execution state.
+
+This paper frames that gap as a control-structure problem and applies STAMP/STPA at the execution boundary where actions are bound, permitted, denied, and recorded. The contribution is a bounded, evidence-aligned safety case for that boundary, not a claim of universal safe AI.
 
 # 2. STAMP: What It Says and Why It Applies
 
-Nancy Leveson developed Systems-Theoretic Accident Model and Processes over decades of research into why complex sociotechnical systems fail. The core argument is a departure from how most engineers think about accidents. The traditional model says accidents happen because components fail. Find the broken component. Fix it. The model that replaced it in safety-critical engineering says accidents happen because of inadequate control. The system was not broken. The control structure failed to keep it safe. Safety is a control problem. Accidents result from a lack of appropriate constraints on the behavior of the system's components and their interactions. -- Leveson, Engineering a Safer World, 2011 This reframing has consequences. If accidents are control failures, then safety engineering is the engineering of control structures. The question is not what broke but what the control structure failed to prevent, and why.
+STAMP treats accidents as control failures, not only component failures: controllers issue actions based on process models, and safety depends on whether constraints remain enforced as the model is updated by feedback. For this paper, three STAMP ideas are sufficient: hazards are system states, safety constraints must be enforced on the real path to side effects, and process-model drift is central risk.
 
 ## 2.1 The Core Model
 
-STAMP's analytical vocabulary is precise and small. A loss is an unacceptable outcome the system exists to prevent. A hazard is a system state that, given worst-case environmental conditions, leads to a loss. A safety constraint is a behavioral boundary whose enforcement prevents hazard state entry. The control structure is the complete system responsible for enforcing safety constraints. It has controllers that issue control actions, controlled processes that respond to them, and feedback mechanisms that return information about the controlled process state to the controller. Safety is a property of this structure, not of individual components. The process model is the controller's internal representation of the controlled process state. The controller does not act on reality. It acts on its model of reality. If the model is accurate, control actions will be appropriate. If it has drifted -- stale, incomplete, corrupted, or manipulated -- control actions will be wrong. Accidents follow. Keep the process model accurate. Everything else is in service of that.
+We use STAMP vocabulary in its standard form: losses, hazards, constraints, controllers, controlled process, and feedback. The key implication is practical: controllers act on process models rather than direct reality, so stale or incomplete models produce unsafe control actions even when individual components appear healthy.
 
 ## 2.2 The Feedback Requirement
 
-The process model stays accurate through feedback. The controller issues a control action. The controlled process responds. Feedback returns information about that response to the controller, updating the process model before the next control action. This is a closed control loop. Open-loop control -- action without feedback -- cannot maintain process model accuracy over time. The model drifts. Actions become inappropriate. STAMP predicts this failure mode. It is not an edge case. It is the expected outcome of open-loop governance in a changing system. Most agent governance frameworks are open-loop. They constrain or monitor agent behavior but provide no mechanism for the governance system to update its model of what the agent is doing based on observed outcomes. The governance system issues constraints and then loses contact with the controlled process. STAMP predicts exactly what happens next.
+Closed-loop feedback is therefore a requirement, not an enhancement. Open-loop governance can constrain outputs but cannot guarantee that the controller's model remains aligned with executed actions over time.
 
 ## 2.3 Why STAMP Has Not Been Applied Here
 
-STAMP was developed for physical controlled processes. Its implicit assumptions reflect that origin. The controller is distinct from the controlled process. The controlled process has a fixed identity determined by physical architecture. Feedback is generated by physical sensors the controlled process cannot manipulate. Autonomous agent systems violate all three assumptions. An agent can act as both controller and controlled process in nested workflows. Agent identity is not fixed -- it must be constructed and verified at runtime. An agent system generates its own records and can, without integrity controls, manipulate them. Prior STAMP applications to software-intensive systems exist -- primarily in aerospace and safetycritical embedded contexts. Applications to AI systems have focused on model-level safety analysis: examining individual inference pipelines, analyzing failure modes of specific components. No prior work uses STAMP as the theoretical foundation for the governance layer that sits above those components and manages their actions in production. The violations of STAMP's physical assumptions do not invalidate the framework. They require its extension. The three extensions ARE provides are precisely targeted: the Passport for identity, the Ledger for manipulation-resistant feedback, the Coprocessor for physical interposition. Each addresses exactly one place where agent systems break STAMP's assumptions, and nothing else.
+Applying STAMP to autonomous agents requires explicit handling of identity, interposition, and evidence integrity that physical systems often inherit from architecture. ARE treats those as first-class control surfaces (Passport, interposed coprocessor, immutable ledger) so STPA can be applied to the governed execution path without claiming closure outside that boundary.
 
 # 3. Agent Responsibility Engineering
 
@@ -68,7 +70,7 @@ The earlier “Table 1” style mapping in the source manuscript expressed a **c
 
 1. **Correspondence (engineering narrative):** STAMP’s control-structure reading applies to agent stacks when the **controlled process** is taken as “agents plus executors that touch the world,” and the **controller** is the governance plane that issues permits, denials, modifications, and escalations. ARE instantiates that reading on a **golden execution path** using passports, a policy coprocessor, a pre-execution validator, receipts, atomic execution orchestration, and an append-only ledger—components named plainly here; **Appendix A** lists roles in **redacted** form for a public preprint.
 
-2. **STPA completeness (within boundary):** For the **defined execution boundary** fixed in [`STPA_PACKAGE.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_PACKAGE.md) §1 and closed in [`STPA_RESOLUTION.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md) *(same filenames under `research/stpa/` in the private ARE monolith)*, every hazard **H1–H7** has exactly one disposition: **Mitigated**, **Accepted (bounded residual)**, or **Assumption-bounded**. That is what we mean by **bounded STAMP/STPA-complete**: **closure discipline** in the analysis layer, aligned to **test-backed** behavior on the path under review—not “all hazards in the universe eliminated.”
+2. **STPA closure (within boundary):** For the **defined execution boundary** fixed in [`STPA_PACKAGE.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_PACKAGE.md) §1 and closed in [`STPA_RESOLUTION.md`](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md) *(same filenames under `research/stpa/` in the private ARE monolith)*, every hazard **H1–H7** has exactly one disposition: **Mitigated**, **Accepted (bounded residual)**, or **Assumption-bounded**. That is what we mean by **bounded STAMP/STPA closure**: **closure discipline** in the analysis layer, aligned to **test-backed** behavior on the path under review—not “all hazards in the universe eliminated.”
 
 **Permit + Ledger (remediated invariant):** On the policy coprocessor, a verdict that would **permit** execution must not leave the API unless the immutable **Ledger** write for that evaluation succeeds. Otherwise the effect is a **deny** with aligned evidence (`deny_reason: ledger_write_failed`). This closes a former gap where a permit could be returned without durable ledger evidence; see interposition audit scar tissue and Rust tests in the repository.
 
@@ -88,6 +90,8 @@ The authoritative table is `STPA_RESOLUTION.md` §1. In prose: **H1** (verdict b
 
 STAMP's control structure model contains an implicit identity assumption: the controller knows what entity it is controlling. In physical systems this is satisfied by physical architecture. The controller is wired to specific actuators. The sensor reports from a specific location. Identity is not a runtime concern. In autonomous agent systems, identity is the hard problem. An agent has no physical presence. Its identity must be constructed, verified, and maintained at runtime. Without a mechanism for this, the control structure cannot attribute actions, cannot enforce per-agent authority, cannot maintain an agent-specific process model. The Passport is that mechanism.
 
+Claims in §§5–10 are interpreted relative to the execution boundary and assumptions in §4.1.
+
 ## 5.1 What the Passport Contains
 
 A valid Passport encodes: a unique cryptographic identifier for the agent, the issuing principal and full delegation chain, the scope of delegated authority, behavioral constraints inherited from the governance framework, operational boundaries, and an expiry condition. It is signed by the issuing authority and verified by the coprocessor at every verdict. Passport expiry is a safety mechanism, not an administrative one. An agent operating on a stale Passport is an agent whose authority state may no longer reflect current policy. From STAMP's perspective, this is process model inaccuracy -- the controller's model of the agent's authority does not match the agent's actual authorized scope. ARE treats Passport staleness as a hazard condition. Action is blocked pending re-issuance.
@@ -96,7 +100,7 @@ A valid Passport encodes: a unique cryptographic identifier for the agent, the i
 
 *Posture-layer meta-governance as described below is **design intent** in the broader ARE narrative; this paper’s **verified** claims remain those traceable to the **frozen evaluation corpus** and `STPA_RESOLUTION.md`.*
 
-A serious objection to any agent governance framework is the recursion question: who governs the governance agent When agents compose -- when a parent agent delegates to a child agent that may delegate further -- authority propagation becomes a primary attack surface. Three specific failure modes arise in multi-agent systems that the Passport and Delegation Model are designed to prevent. Authority amplification through composition : a child agent cannot be granted authority the parent does not hold. The Passport encodes the delegation chain. Every link in the chain is bounded by the issuing agent's own Passport scope. The coprocessor verifies the full chain at verdict time. An agent claiming authority it was not granted produces a chain that does not verify. Delegation of control logic : an agent cannot delegate the governance function itself. The coprocessor is not an agent. It is architectural infrastructure. An agent cannot instruct the coprocessor to issue verdicts differently on its behalf. The governance layer is not within the scope of what agents can control. Recursive controller problem : a **Posture** layer in the architecture narrative governs the governance system itself—monitoring the coprocessor, ledger write path, and passport registry for degradation. It does not resolve infinite regress; no finite system can. Treat detailed posture semantics as **product and deployment** concerns unless tied to a specific test or gate in the evidence bundle. What the Passport and Delegation Model do not resolve: emergent authority accumulation across large agent networks operating over extended time horizons. That is identified as future work. Within the scope of first and second-order delegation -- which covers the vast majority of production multi-agent architectures -- the model is complete.
+A serious objection to any agent governance framework is the recursion question: who governs the governance agent? When agents compose -- when a parent agent delegates to a child agent that may delegate further -- authority propagation becomes a primary attack surface. Three specific failure modes arise in multi-agent systems that the Passport and Delegation Model are designed to prevent. Authority amplification through composition : a child agent cannot be granted authority the parent does not hold. The Passport encodes the delegation chain. Every link in the chain is bounded by the issuing agent's own Passport scope. The coprocessor verifies the full chain at verdict time. An agent claiming authority it was not granted produces a chain that does not verify. Delegation of control logic : an agent cannot delegate the governance function itself. The coprocessor is not an agent. It is architectural infrastructure. An agent cannot instruct the coprocessor to issue verdicts differently on its behalf. The governance layer is not within the scope of what agents can control. Recursive controller problem : a **Posture** layer in the architecture narrative governs the governance system itself—monitoring the coprocessor, ledger write path, and passport registry for degradation. It does not resolve infinite regress; no finite system can. Treat detailed posture semantics as **product and deployment** concerns unless tied to a specific test or gate in the evidence bundle. What the Passport and Delegation Model do not resolve: emergent authority accumulation across large agent networks operating over extended time horizons. That is identified as future work. Within the scope of first and second-order delegation -- which covers the vast majority of production multi-agent architectures -- the model is complete.
 
 # 6. The Operations Ledger
 
@@ -109,6 +113,15 @@ Immutability means the historical process model cannot be corrupted or revised. 
 ## 6.2 Trust-Minimization, Not Absolute Trust
 
 The Ledger does not claim to be unbreakable. It claims to make breaking detectable. This is the correct framing for a trust-minimized system and it matters for how the security properties should be understood. A reviewer will correctly identify that the Ledger's integrity guarantees depend on the integrity of the system writing to it. Three specific attack surfaces exist and should be stated explicitly. **Pre-Ledger actions:** an agent acting before durable evidence exists produces a gap in the record. On the **permit** path, the coprocessor does not return **Allow** without a successful ledger write for that evaluation (`STPA_RESOLUTION.md`, **H6**); on the **golden execution** path, receipt generation precedes executor invocation (**H4**). **Side-channel actions:** an agent that can act through channels outside the governed stack evades this safety case—**A_route** / **A_ex** and interposition Option B in `STPA_RESOLUTION.md` §4. **Partial write failures:** behavior is **not** uniformly “halt the world”: for **Allow+Ledger**, a failed write yields **Deny** with `ledger_write_failed`; for some **non-Allow** outcomes, a failed ledger write may still be returned and is **accepted** outside the *Permit* claim (same hazard table). Optional posture-style monitoring of chain continuity is **not** asserted here as universally implemented or fail-closed across every subsystem—the monograph language below should be read against that nuance.
+
+### 6.2.1 Condensed threat model
+
+| Threat | Surface | In-boundary treatment | Residual / assumption |
+|---|---|---|---|
+| Ungoverned execution path | routing / alternate executor | interposition + audit controls | `A_route`, `A_ex`, `A_int` |
+| Stale authority visibility | distributed state and revoke propagation | bind-time checks + fail-closed reads | finite lag (`A_dist`) |
+| Permit-path ledger write failure | verdict evidence write | Allow candidate downgraded to deny | non-Allow residual classes |
+| Evidence tamper | receipt / ledger integrity chain | hash-chained append semantics | infra and key-root assumptions |
 
 ## 6.3 Ledger as Feedback
 
@@ -144,11 +157,15 @@ The source manuscript describes **tiered** responses (elevated block, posture fl
 
 **Interposition wins when the path is real:** a scope violation is caught **before** side effect if the request is actually forced through coprocessor + PEV + atomic ordering. **Evidence helps auditability** when verdicts and outcomes are durably recorded. **What is not proved by the story:** that every deployment enables the same escalation choreography, that regulators would accept a specific ledger schema, or that no human reviewer is ever required—those are **organizational** layers on top of the bounded technical case.
 
+## 8.4 Harder edge cases: accepted residuals in scope
+
+Two non-ideal cases matter more than a straightforward deny. First, **H6 permit-path ledger failure**: on the governed path, an Allow candidate without durable ledger write is downgraded to deny (`ledger_write_failed`), preserving fail-closed permit semantics. Second, **H3 revocation propagation lag**: in distributed deployments, finite visibility delay can persist even with ordered updates; this is treated as accepted residual under named assumptions rather than claimed eliminated. These are exactly the kinds of boundary truths that keep the closure claim honest.
+
 # 9. Lightweight Formalism
 
 *The invariants below are **architectural intent** on the governed path; deployment must preserve interposition. They are not TLAPS theorems.*
 
-The following formalism is intentionally minimal. Its purpose is to make the control structure's properties precise enough to reason about without requiring full formal verification. A complete temporal logic treatment is identified as future work in §15.1.
+The following notation makes the architecture's safety properties falsifiable. It is not a machine-checked proof; it is a specification against which implementation can be tested. The TLA+ skeleton in the repository is a proof target for future work.
 
 ## 9.1 State, Action, and Control
 
@@ -160,7 +177,7 @@ Let E denote a Ledger event. Each event is a tuple: E = (agent_id, action, verdi
 
 ## 9.3 The SDAVL Loop as a State Transition System
 
-The SDAVL loop can be expressed as a state transition system over S: Sense: query(L, agent_id) -> S_current Decide: C(S_current, A) -> verdict Act: enforce(verdict) -> outcome Verify: E = (agent_id, A, verdict, basis, H(L.head)) Learn: S' = (U(L, E), P) The system state after each loop iteration is S'. The next iteration operates on S'. The loop is closed: every action produces a state update that the next action evaluates against. The process model cannot become stale within a single action sequence because it is updated after every action.
+The SDAVL loop can be expressed as a state transition system over S: Sense: query(L, agent_id) -> S_current Decide: C(S_current, A) -> verdict Act: enforce(verdict) -> outcome Verify: E = (agent_id, A, verdict, basis, H(L.head)) Learn: S' = (U(L, E), P) The system state after each loop iteration is S'. The next iteration operates on S'. The loop is closed: every action produces a state update that the next action evaluates against. The governed path is designed to minimize process-model drift through ordered updates, receipt binding, and durable evidence recording.
 
 ## 9.4 The Safety Property
 
@@ -180,7 +197,7 @@ The four layers (identity, enforcement, process model, posture) describe a **uni
 
 ## 10.1 The Interaction Sequence
 
-On every agent action: the agent proposes an action. The coprocessor intercepts it. The coprocessor verifies the Passport -- identity confirmed, authority scoped, expiry checked. The coprocessor queries the Ledger -- process model state retrieved, behavioral history assessed. The coprocessor evaluates policy -- verdict issued. The verdict is enforced. The outcome is recorded to the Ledger as a hashchain event. The process model is updated. The loop closes. The next action request encounters a controller whose process model reflects verified current reality. That is what STAMP requires. That is what this architecture provides.
+On every agent action: the agent proposes an action. The coprocessor intercepts it. The coprocessor verifies the Passport -- identity confirmed, authority scoped, expiry checked. The coprocessor queries the Ledger -- process model state retrieved, behavioral history assessed. The coprocessor evaluates policy -- verdict issued. The verdict is enforced. The outcome is recorded to the Ledger as a hashchain event. The process model is updated. The loop closes. The next action request encounters a controller whose process model reflects verified current reality.
 
 ## 10.2 Failure Mode Analysis
 
@@ -188,9 +205,7 @@ A control structure that only works when nothing goes wrong is not a safety syst
 
 # 11. Structural contrast with output-filtering guardrails
 
-*Qualitative comparison; NeMo Guardrails and ARE both evolve—check current docs before citing feature matrices.*
-
-The critical distinction is **state and placement**. NeMo Guardrails is stateless: it evaluates each output independently without reference to behavioral history. ARE's process model -- the Operations Ledger -- means every verdict is informed by what the agent has done across its entire operational history. A first-time scope violation and a tenth repeated scope violation look the same to NeMo Guardrails. To ARE they are categorically different events with different policy responses. The second critical distinction is interposition versus filtering. NeMo Guardrails operates after the agent has reasoned and produced an output. It filters what comes out. ARE's coprocessor operates before execution -- before the action reaches the system it would affect. Filtering catches outputs. Interposition prevents actions. In a regulated environment where the action is the violation -- accessing PII, initiating an unauthorized transaction -- filtering after the fact is not sufficient. The action must not execute. NeMo Guardrails does not claim to be a STAMP-compliant control structure. The comparison is not a criticism of its design goals. It is a clarification of what problem each framework solves. NeMo Guardrails constrains model outputs. ARE governs agent actions. These are different problems with different solutions.
+This contrast is incorporated in **§14.2** with the broader runtime-governance discussion, including contemporary 2026 preprints.
 
 # 12. Limits of ARE
 
@@ -212,7 +227,7 @@ Evidence is **tiered**, not binary. The **argument** lives in this paper (includ
 
 **Attestation (frozen packet identity).** The submission freeze referenced throughout this work is directory `research/evidence-bundles/2026-04-26-stamp-safety-reviewer-packet-submission/`, commit **`653d455346e57f6a0ba37eecb4132138d923a36d`** (see `GIT_HEAD.txt` in the packet). Contents include copies of normative STPA and paper pointers, **full** pytest output (`test-output.log`), internal gate matrix logs, `MANIFEST.md`, and **`FILES.sha256`** for integrity. At freeze, STAMP harness tests reported **10 passed**; internal gates **48 components, ALL PASS** (see bundle logs—re-freeze updates these numbers). **Private-only** paths for claim discipline and audits (not mirrored on the public repo): `research/interposition_audit.md`, `research/claims_ledger.md`, `research/reviewer_attacks.md`, and track summaries under `research/track-a-stamp/`, `research/track-b-interposition/`, and `research/DUAL_TRACK_SUMMARY.md`.
 
-**Escalation.** Reviewers may obtain the zip under confidentiality or as **arXiv Ancillary** / supplementary material. From a clone that contains the bundle, a portable tree can be assembled with `python tools/paper/assemble_submission_package.py` (see `paper/submission-package/README.md`). Hashes and transcripts are sufficient to **check** the paper’s evidentiary claims without treating the PDF as the log dump.
+**Escalation.** Reviewers may obtain the zip under confidentiality or as **arXiv Ancillary** / supplementary material. Access requests should be sent to the corresponding-author contact listed in this manuscript, including venue and review context; the intent is a prompt turnaround under appropriate confidentiality terms. From a clone that contains the bundle, a portable tree can be assembled with `python tools/paper/assemble_submission_package.py` (see `paper/submission-package/README.md`). Hashes and transcripts are sufficient to **check** the paper’s evidentiary claims without treating the PDF as the log dump.
 
 ### 13.1 Graphic summary (tables + equation-style figures)
 
@@ -228,6 +243,12 @@ Figures below are generated by `tools/paper/render_paper_assets.py` (run before 
 
 **Formal methods (not shown as images):** `formal/tla/are_execution_boundary.tla` is a **TLA+ skeleton** — a **proof target**, not a TLAPS proof.
 
+\clearpage
+
+### 13.2 Operational overhead note (bounded)
+
+Interposition adds policy evaluation, bind-time checks, and evidence writes to the hot path. In the frozen evaluation corpus this overhead remains within the bounded performance evidence cited in the packet, but this preprint does not claim universal latency/throughput bounds across all deployment shapes.
+
 # 14. Related Work
 
 ## 14.1 STAMP Applications in Software and AI Systems
@@ -236,9 +257,18 @@ STAMP has been applied extensively in aerospace, nuclear, medical devices, and t
 
 ## 14.2 Agent Governance Frameworks
 
-The dominant agent governance approaches -- constraint-based, checkpoint-based, and monitoring-based -- share a structural failure when analyzed through STAMP. They are open-loop. They issue constraints or observe behavior but provide no mechanism for the governance system to update its model of what the agent is doing based on observed outcomes. An open-loop governance system cannot maintain process model accuracy. STAMP predicts the failure modes that result. NeMo Guardrails (NVIDIA, 2023) is a widely used toolkit for controllable LLM applications. **Section 11** gives a prose-only contrast (no maintained table in this Markdown). The recurring gap in STAMP terms: **output filtering** is not the same as an **interposed execution controller** with durable identity and path-level evidence. These are different solutions to overlapping but non-identical problems.
+The dominant agent governance approaches -- constraint-based, checkpoint-based, and monitoring-based -- share a structural weakness in STAMP terms: they are often open-loop. They issue constraints or observe behavior but do not always maintain a process model updated from executed outcomes. In a changing system, that mismatch accumulates risk.
 
-## 14.4 AI Safety and Alignment
+### 14.2.1 Structural comparison within runtime governance
+
+- **NeMo Guardrails (NVIDIA, 2023):** primarily output-layer controls; useful for response shaping, but not equivalent to pre-execution interposition on consequential side effects.
+- **Fernandez (2026, Agent Control Protocol):** admission-control framing for agent actions; this paper differs by making identity lineage and process-model feedback central to hazard closure claims.
+- **Kaptein et al. (2026, Runtime Governance for AI Agents):** path-governance framing for runtime policy; this paper differs by anchoring claims to explicit STPA hazard/UCA dispositions with bounded residual declarations.
+- **Mazzocchetti (2026, Aegis):** cryptographic enforcement emphasis; this paper differs by coupling evidence integrity to a STPA-grounded control argument rather than presenting cryptographic verifiability alone as the safety case.
+
+These are overlapping efforts with different emphases. The novelty claimed here is bounded STPA closure discipline at a declared execution boundary, not ownership of runtime governance as a general idea.
+
+## 14.3 AI Safety and Alignment
 
 The alignment and interpretability research community addresses a related but distinct problem: ensuring that AI systems behave in accordance with human values and intentions. Constitutional AI (Bai et al., 2022), RLHF (Christiano et al., 2017), and interpretability work operate at the model layer. The distinction is this: alignment asks whether the model will choose to behave safely. ARE asks whether the system will permit unsafe behavior regardless of what the model chooses. Safety engineering's answer to this question has been consistent for fifty years: do not rely on the controlled process choosing to stay within safe boundaries. Build a control structure that enforces boundaries regardless. ARE is that control structure.
 
@@ -246,7 +276,7 @@ The alignment and interpretability research community addresses a related but di
 
 Leveson’s STAMP/STPA tradition gives agent governance a **control-structure** vocabulary: controllers, controlled processes, feedback, process models, and explicit hazards—not only component failure. **Agent Responsibility Engineering** implements a **governed execution path** where permits are bound to identity and policy state, receipts precede side effects on the golden chain, and **permit plus durable ledger evidence** fail closed together.
 
-The contribution of this **revised** preprint is **honest closure**: a **bounded STPA-complete** disposition record for hazards **H1–H7** at the **defined execution boundary**, with **traceability** to tests and audits, and with **out-of-scope** and **residual** items stated plainly. That is a **systems safety case** contribution—not a certificate of universal safe AI.
+The contribution of this **revised** preprint is **honest closure**: a **bounded STAMP/STPA closure** disposition record for hazards **H1–H7** at the **defined execution boundary**, with **traceability** to tests and audits, and with **out-of-scope** and **residual** items stated plainly. That is a **systems safety case** contribution—not a certificate of universal safe AI.
 
 **Intelligence never grants authority.** On the path we analyze, **authority** is separated from **capability**: it is enforced through verifiable gates and recorded evidence, under assumptions operators must still honor in deployment.
 
@@ -325,7 +355,7 @@ Additional citations from the source manuscript (Rabanser et al., runtime govern
 
 *Authoritative rationale, residuals, and assumptions: [`STPA_RESOLUTION.md` §1](https://github.com/srex-dev/AgentResponsibilityEngineering/blob/main/research/stpa/STPA_RESOLUTION.md).*
 
-| ID | Hazard (abbrev.) | Resolution (within boundary) |
+| ID | Hazard (short description) | Resolution (within boundary) |
 |----|------------------|--------------------------------|
 | **H1** | Execution without verdict bound to action | **Mitigated** |
 | **H2** | Invalid / forged / expired authority as valid | **Mitigated** |
@@ -341,4 +371,4 @@ Additional citations from the source manuscript (Rabanser et al., runtime govern
 
 ![Figure C-1. Governed execution chain (graphic summary).](assets/fig_golden_path.png)
 
-*Version note: Assembled by `tools/paper/build_stamp_arxiv_reconciled.py` (private ARE repo) from `paper/STAMP_ARE_docx_paragraphs.txt` plus reconciled inserts; §5.2–§12.2 and §14.2 are spliced from `paper/stamp_arxiv_alignment_block.md` and `paper/stamp_arxiv_alignment_14_2.md` when present. Deposit PDF is Markdown-derived (see `paper/README_PAPER_PIPELINE.md` in the monolith for tooling). Re-freeze evidence and update the commit hash in §13 when preparing submission.*
+*Version note: Assembled by `tools/paper/build_stamp_arxiv_reconciled.py` (private ARE repo) from `paper/STAMP_ARE_docx_paragraphs.txt` plus reconciled inserts; §5.2–§12.2 and §14.2 are spliced from `paper/stamp_arxiv_alignment_block.md` and `paper/stamp_arxiv_alignment_14_2.md` when present. Re-freeze evidence and update the commit hash in §13 when preparing submission.*

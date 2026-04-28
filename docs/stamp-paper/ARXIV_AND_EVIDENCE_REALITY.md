@@ -15,3 +15,4 @@
 | Full bundle path + integrity | `research/evidence-bundles/README.md` |
 | Public one-page attestation | `paper/EVIDENCE_PUBLIC_SUMMARY.md` |
 | Word/PDF quirks | `paper/PDF_AND_WORD_FORMATTING.md` |
+| Local compose vs synthetic vs staging (T0–T3) | `docs/validation-tiers.md` |
